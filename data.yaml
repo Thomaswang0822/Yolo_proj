@@ -1,6 +1,6 @@
-path: ../datasets/
-train: images/train
-val: images/test
+path: ../
+train: train_data
+val: test_data
 
 nc: 20
 
