@@ -2,3 +2,5 @@ data_images/
 .ipynb_checkpoints/
 test_data/
 train_data/
+yolov5/
+*.cache

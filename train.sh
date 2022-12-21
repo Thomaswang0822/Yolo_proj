@@ -9,3 +9,6 @@ pip install -r requirements.txt
 
 # test training
 python3 train.py --batch-size 8 --epochs 10 --data data.yaml --name Model_Test --cfg yolov5s.yaml --patience 5
+
+# save best model into open-cv format (onnx)
+python export.py --weights runs/train/Model_Test/weights/best.pt --include onnx --simplify
