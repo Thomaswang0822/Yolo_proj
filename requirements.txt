@@ -1,0 +1,12 @@
+# Python packages needed for our project.
+# Also check and install <yolo_repo>/requirements.txt 
+# for other core and optional YOLO functioning packages.
+
+numpy
+pandas
+matplotlib
+opencv-python
+jupyter
+labelImg
+streamlit
+scikit-learn

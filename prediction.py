@@ -9,9 +9,11 @@ class Yolo_Predictor():
     def __init__(self, onnx_dir, yolo_dir):
         # 1. Load data.yaml file (config); get id_tag map
         with open(pjoin(yolo_dir, 'data.yaml'), 'r') as f:
-            # this is a dict
-            data_yaml = yaml.load(f, Loader=SafeLoader)
+            data_yaml = yaml.load(f, Loader=SafeLoader)     # dict
         self.labels = list(data_yaml['names'])
+        # id-color map for drawing the bbox
+        np.random.seed(777)
+        self.colors = np.random.randint(0, 256, size=(len(self.labels), 3)).tolist()
 
         # 2. Load trained yolo model into opencv
         self.yolov5 = cv2.dnn.readNetFromONNX(MODEL_DIR)
@@ -92,7 +94,13 @@ class Yolo_Predictor():
             # cv2.rectangle(image, top-left, bot-right, box colr, thickness)
             GREEN = (0, 255, 0)
             BLACK = (0, 0, 0)
-            cv2.rectangle(self.image, (x_left, y_top), (x_left+width, y_top+height), GREEN, 2)
+            cv2.rectangle(
+                self.image, 
+                (x_left, y_top), 
+                (x_left+width, y_top+height), 
+                self.colors[id_list[idx]], # color according to class id
+                2
+            )
             cv2.putText(self.image, text, (x_left, y_top-10), cv2.FONT_HERSHEY_PLAIN, 0.8, BLACK, 1)
 
     
