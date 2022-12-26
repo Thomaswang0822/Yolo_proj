@@ -112,8 +112,8 @@ class Yolo_Predictor():
 
 
 if __name__ == "__main__":
-    YOLO_DIR = "yolov5-old/"
-    MODEL_DIR = "./yolov5-old/runs/train/Model100_small/weights/best.onnx"
+    YOLO_DIR = "."
+    MODEL_DIR = "./best.onnx"
     fname = "000229.jpg"
 
     yolo_model = Yolo_Predictor(MODEL_DIR, YOLO_DIR)
