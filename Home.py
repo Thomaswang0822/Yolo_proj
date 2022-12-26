@@ -21,7 +21,7 @@ st.header("Home Page")
 
 # TODO: Project info
 st.subheader("About our project:")
-st.write("Our project ...")
+st.write("Our project reproduces [YOLO v5](https://github.com/ultralytics/yolov5) by training a new")
 
 # TODO: Demo
 st.subheader("Here is a demo of our object detection model:")
