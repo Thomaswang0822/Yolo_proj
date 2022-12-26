@@ -48,6 +48,7 @@ camera_image = camera.camera_input("Take a picture with your camera:")
 if camera_image is not None:
     image = camera_image
     cur_image.img_display.image(image)
+    cur_image.img_warning.empty()
     if file_image is not None:
         cur_image.img_warning.error("You have two image inputs! "
                                     "Only image from camera will be used if no further action is taken.")
@@ -78,6 +79,9 @@ if det_but and image is not None:
         pred_img = Image.fromarray(yolo_model.image, 'RGB')
         output_text.subheader("Image with object detection:")
         output_img.image(pred_img)
+
+        if not detected:
+            output_warning.warning("No object of interest detected.")
     detection.balloons()
 
 elif det_but:
