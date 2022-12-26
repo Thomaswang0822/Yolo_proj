@@ -1,6 +1,8 @@
 import time
-
 import streamlit as st
+from PIL import Image
+# Import prediction script 
+from prediction import Yolo_Predictor
 
 # Set page configurations
 # noinspection PyTypeChecker
@@ -63,9 +65,19 @@ det_but = detection.button("detect",
 if det_but and image is not None:
     with st.spinner('Processing...'):
         # TODO: Change this line to load the model and do the detection
-        time.sleep(2)
+        YOLO_DIR = "."
+        MODEL_DIR = "./best.onnx"
+
+        yolo_model = Yolo_Predictor(MODEL_DIR, YOLO_DIR)
+        img_input = yolo_model.load_img_from_stream(image)
+        pred = yolo_model.one_prediction(img_input)
+        yolo_model.NMS_Draw(pred, img_input)
+        # yolo_model.display_img()
+
+        # instead of display a pop-up window, we save the image. 
+        pred_img = Image.fromarray(yolo_model.image, 'RGB')
         output_text.subheader("Image with object detection:")
-        output_img.image(image)
+        output_img.image(pred_img)
     detection.balloons()
 
 elif det_but:

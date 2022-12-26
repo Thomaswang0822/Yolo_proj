@@ -4,3 +4,5 @@ test_data/
 train_data/
 yolov5-old/
 *.cache
+pages/__pycache__
+/__pycache__

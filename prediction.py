@@ -16,7 +16,7 @@ class Yolo_Predictor():
         self.colors = np.random.randint(0, 256, size=(len(self.labels), 3)).tolist()
 
         # 2. Load trained yolo model into opencv
-        self.yolov5 = cv2.dnn.readNetFromONNX(MODEL_DIR)
+        self.yolov5 = cv2.dnn.readNetFromONNX(onnx_dir)
         # set computing engine
         self.yolov5.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
         # make computations on device
@@ -26,6 +26,19 @@ class Yolo_Predictor():
     # *** We can have variable size training images, but test images should be cropped to fixed sqaure size ***
     def load_img(self, fname, img_dir="./test_data"):
         self.orig_image = cv2.imread(pjoin(img_dir, fname))  # original image (to be compared with)
+        self.image = self.orig_image.copy()   # np ndarray
+        nrow, ncol, ch = self.image.shape
+        assert ch == 3, "require testing image in RGB format"
+
+        l = max(nrow, ncol)
+        img_input = np.zeros((l,l,3), dtype=np.uint8)   # black background board
+        img_input[:nrow, :ncol] = self.image     # fill in image
+        return img_input    # feed this to yolo model
+
+    # for our web-app
+    def load_img_from_stream(self, img_stream):
+        self.orig_image = cv2.imdecode(np.frombuffer(img_stream.read(), np.uint8), 1)  # original image (to be compared with)
+        self.orig_image = self.orig_image[:, :, ::-1]
         self.image = self.orig_image.copy()   # np ndarray
         nrow, ncol, ch = self.image.shape
         assert ch == 3, "require testing image in RGB format"
@@ -89,7 +102,6 @@ class Yolo_Predictor():
 
             # format text display
             text = f"{tag}: {conf:.1f}%"
-            print(text)
 
             # cv2.rectangle(image, top-left, bot-right, box colr, thickness)
             GREEN = (0, 255, 0)
@@ -110,14 +122,3 @@ class Yolo_Predictor():
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
-
-if __name__ == "__main__":
-    YOLO_DIR = "."
-    MODEL_DIR = "./best.onnx"
-    fname = "000229.jpg"
-
-    yolo_model = Yolo_Predictor(MODEL_DIR, YOLO_DIR)
-    img_input = yolo_model.load_img(fname)
-    pred = yolo_model.one_prediction(img_input)
-    yolo_model.NMS_Draw(pred, img_input)
-    yolo_model.display_img()
