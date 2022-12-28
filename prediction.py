@@ -93,7 +93,7 @@ class Yolo_Predictor():
 
         # NMS
         nms_return = cv2.dnn.NMSBoxes(bbox_list, conf_list, conf_thold, prob_thold)
-        if not nms_return:
+        if len(nms_return) == 0:
             print("No object of interest detected in the image.")
             return False
         index = nms_return.flatten()

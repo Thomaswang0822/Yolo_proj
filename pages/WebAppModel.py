@@ -1,4 +1,8 @@
 import time
+from io import BytesIO, BufferedReader
+
+import cv2
+import numpy as np
 import streamlit as st
 from PIL import Image
 # Import prediction script 
@@ -44,7 +48,6 @@ if file_image is not None:
 camera.header("Camera Image Input")
 camera_image = camera.camera_input("Take a picture with your camera:")
 
-
 if camera_image is not None:
     image = camera_image
     cur_image.img_display.image(image)
@@ -60,7 +63,8 @@ output_text = output_container.empty()
 output_img = output_container.empty()
 output_warning = output_container.empty()
 
-det_but = detection.button("detect",
+det_but_space = detection.empty()
+det_but = det_but_space.button("detect",
                            help='Start detection')
 
 if det_but and image is not None:
@@ -83,6 +87,21 @@ if det_but and image is not None:
         if not detected:
             output_warning.warning("No object of interest detected.")
     detection.balloons()
+
+    pred_img_arr = np.array(pred_img)[:, :, ::-1]
+    ret, pred_img_enco = cv2.imencode(".png", pred_img_arr)  # numpy.ndarray
+    pred_str_enco = pred_img_enco.tostring()  # bytes
+    # noinspection PyTypeChecker
+    pred_img_BufferedReader = BufferedReader(BytesIO(pred_str_enco))
+
+    # Download button
+    detection.download_button(
+        label="Download detected image as png",
+        data=pred_img_BufferedReader,
+        file_name='Detected_image.png',
+        mime="image/png"
+    )
+    det_but_space.empty()
 
 elif det_but:
     output_warning.error("No input image!")
