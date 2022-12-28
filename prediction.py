@@ -92,7 +92,11 @@ class Yolo_Predictor():
                     id_list.append(tag_id)
 
         # NMS
-        index = cv2.dnn.NMSBoxes(bbox_list, conf_list, conf_thold, prob_thold).flatten()
+        nms_return = cv2.dnn.NMSBoxes(bbox_list, conf_list, conf_thold, prob_thold)
+        if not nms_return:
+            print("No object of interest detected in the image.")
+            return False
+        index = nms_return.flatten()
 
         for idx in index:
             # retrieve info
@@ -115,6 +119,7 @@ class Yolo_Predictor():
             )
             cv2.putText(self.image, text, (x_left, y_top-10), cv2.FONT_HERSHEY_PLAIN, 0.8, BLACK, 1)
 
+        return True
     
     def display_img(self):
         cv2.imshow('Original Image', self.orig_image)
