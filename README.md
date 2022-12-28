@@ -1,5 +1,5 @@
 
-# Object Detection with YOLO-V5
+# Object Detection with YOLO-V5 Implementation
 
 This is an exploratory project of [YOLO](https://pjreddie.com/darknet/yolo/), the state-of-the-art real-time 
 [object detection](https://en.wikipedia.org/wiki/Object_detection) model. 
@@ -10,6 +10,13 @@ This is an exploratory project of [YOLO](https://pjreddie.com/darknet/yolo/), th
 - Haoxuan Wang [@thomaswang0822](https://www.github.com/thomaswang0822)
 - Jingyu Wu [@leowubj](https://github.com/leowubj)
 
+## Screenshots
+
+![prediction example](./example_results/pred_000229.png)  
+*Image with prediction example*
+
+![Web-app screenshot](./example_results/web_app.png)  
+*Our web-app*
 
 ## Roadmap
 
@@ -41,9 +48,10 @@ If you want to further explore our project, like to:
 
 here is an brief guide on how to get everything to work.  
 
-0. Presumption: your device has GPU and a Python environment that can use your GPU.
+0. ### Presumption: your device has GPU and a Python environment that can use your GPU.
 (You can check this in tensorflow or pytorch)
-1. Clone our repo (or make your own, store your custom dataset, and write corresponding image processing scripts)  
+
+1. ### Clone our repo (or make your own, store your custom dataset, and write corresponding image processing scripts)  
     
     Writing the image processing scripts isn't hard. You can refer to our prepare.ipynb.
     It has enough comment and very likely you only need to change path & filenames.  
@@ -53,13 +61,13 @@ here is an brief guide on how to get everything to work.
     Labeling can be achieved by package [labelImg](https://pypi.org/project/labelImg/)
     and it's included in our requirements.txt
     
-2. Clone YOLOv5 or your choice of version inside our repo
+2. ### Clone YOLOv5 or your choice of version inside our repo
 
 ```bash
   cd my-project # make sure you enter our repo
   git clone https://github.com/ultralytics/yolov5.git
 ```
-3. Install requirements.txt
+3. ### Install requirements.txt
 
 ```bash
   # It contains necessary packages for our project.
@@ -70,12 +78,12 @@ here is an brief guide on how to get everything to work.
   pip install -r requirements.txt
 ```
 
-4. Create a data.yaml file inside yolo folder
+4. ### Create a data.yaml file inside yolo folder
 For contents of this file, you can look at our data.yaml 
 (if you use our data and thus our data.yaml, please remember to move it inside yolo folder)  
 Essentially, data.yaml tells YOLO where the training data & test data are and what object classes they have.
 
-5. Test Training & Training
+5. ### Test Training & Training
 Since YOLO is a quite complex and delicate model, we suggest you make sure the training is
 error-free before you proceed to the actual training (which could take several hours).
 
@@ -85,33 +93,48 @@ cd yolo-repo
 # test training
 python train.py --batch-size 8 --epochs 5 --data data.yaml --name <TestModel> --cfg yolov5s.yaml --patience 5
 
-# real training
-python train.py --batch-size 8 --epochs 100 --data data.yaml --name <model name> --cfg <choice of model size> --patience 5
+# real training, start from scratch
+python train.py --batch-size 8 --epochs 100 --data data.yaml --name <model name> --cfg <choice of model size>.yaml --patience 5 
+
+# real training, on pretrained model
+python train.py --batch-size 8 --epochs 100 --data data.yaml --name <model name> --weights <choice of model size>.pt --patience 5 
 ```
 **NOTE:** Like mentioned at the beginning of this section, YOLOv5 (and other versions of YOLO also) has different model size.
 In short, different model size means different configurations and parameter size.  
 **But larger model doesn't guarantee better performance.** 
 Based on our experiment, using a larger model on a relatively samll dataset could lead to worse performance or even not converging.
 
-6. Check training performance
+6. ### Check training performance
 ```bash
-# still inside yolo repo
+# still inside yolo dir
 cd runs/train/<TestModel>
 ```
 This folder contains different training and validation metrics.  
 In particular, results.png tells you whether the training works fine.  
 For other metrics, you may search them on Google or [YOLOv5 official site](https://github.com/ultralytics/yolov5)
 
-7. Testing
+7. ### Export trained model to [ONNX](https://onnx.ai/) format
+
+```bash
+# still inside yolo dir
+python export.py --weights runs/train/<model name>/weights/best.pt --include onnx --simplify
+
+# either move best.onnx to ROOT or change the path in pred_runner.py (see section below)
+mv runs/train/<model name>/weights/best.onnx ./..
+```
+
+8. ### Testing
 We built the prediction pipeline as a class definition (called Yolo_Predictor) in prediction.py  
 This also serves as the backend script of our web-app.  
 You are welcome to look at our implementation detail, but you don't need to modify it.
 
 Instead, just edit the path variables inside pred_runner.py and run it, super easy.  
-2 pop-up windows will be shown, one being original image, the other being prediction image with bbox, class, and probability.
+2 pop-up windows will be shown, one being original image, the other being prediction image with bbox, class, and probability.  
+Press ESC key and they will close.
 ```bash
 cd .. # back to our repo
 python pred_runner.py
 ```
-## Acknowledgements
+## References
  - [YOLOv5 official site](https://github.com/ultralytics/yolov5)
+ - [Train Custom Data](https://github.com/ultralytics/yolov5/wiki/Train-Custom-Data)
