@@ -69,7 +69,6 @@ det_but = det_but_space.button("detect",
 
 if det_but and image is not None:
     with st.spinner('Processing...'):
-        # TODO: Change this line to load the model and do the detection
         YOLO_DIR = "."
         MODEL_DIR = "./best.onnx"
 

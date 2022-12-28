@@ -15,9 +15,7 @@ st.set_page_config(
     }
 )
 
-# TODO: Header
 st.header("Home Page")
-
 
 # TODO: Project info
 st.subheader("About our project:")
