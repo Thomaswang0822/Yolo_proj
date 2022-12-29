@@ -12,7 +12,7 @@ from prediction import Yolo_Predictor
 # noinspection PyTypeChecker
 st.set_page_config(
     page_title="Detection",
-    page_icon="🆒",
+    page_icon="📸",
     layout="centered",
     initial_sidebar_state="auto",
     menu_items={
