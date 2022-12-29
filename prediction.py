@@ -66,7 +66,7 @@ class Yolo_Predictor():
     # 6. Draw bbox
     ## We want each bbox to have a tag (word instead of id) and a probability
     """ 5 && 6 """
-    def NMS_Draw(self, pred, img_input, conf_thold=0.1, prob_thold=0.5, YOLO_IMG_WH=640):
+    def NMS_Draw(self, pred, img_input, conf_thold=0.4, prob_thold=0.5, YOLO_IMG_WH=640):
         # factors to restore shape info of testing image, which is not 640x640
         x_factor, y_factor = img_input.shape[0]/YOLO_IMG_WH, img_input.shape[1]/YOLO_IMG_WH
 
@@ -124,6 +124,7 @@ class Yolo_Predictor():
     def display_img(self):
         cv2.imshow('Original Image', self.orig_image)
         cv2.imshow('With Object Detection', self.image)
-        cv2.waitKey(0)
+        print("Press ESC to exit.")
+        cv2.waitKey(27)
         cv2.destroyAllWindows()
 
