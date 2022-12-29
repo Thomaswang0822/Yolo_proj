@@ -35,7 +35,7 @@ This is an exploratory project of [YOLO](https://pjreddie.com/darknet/yolo/), th
 ## Usage
 
 If you only want to see how object detection works, you can navigate to our
-web-app(LINK) directly and upload your image.
+[web-app](https://thomaswang0822-yolo-proj-home-j6063r.streamlit.app/) directly and upload your image.
 
 
 ## Installation & Explanation
