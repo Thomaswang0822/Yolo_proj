@@ -11,16 +11,13 @@ from prediction import Yolo_Predictor
 # Set page configurations
 # noinspection PyTypeChecker
 st.set_page_config(
-    page_title="Detection",
+    page_title="Image Detection",
     page_icon="📸",
     layout="centered",
     initial_sidebar_state="auto",
-    menu_items={
-        'About': "# This is an *extremely* cool app!"
-    }
 )
 
-st.title("Object Detection")
+st.title("Object Detection in an Image")
 
 cur_image = st.container()
 
@@ -30,7 +27,7 @@ cur_image.img_display = st.empty()
 cur_image.img_warning = st.empty()
 cur_image.img_warning.warning("No Image")
 
-file_upload, camera, detection = st.tabs(["Upload", "Camera Input", "Object detection"])
+file_upload, camera, detection = st.tabs(["Upload Image", "Camera Input", "Object detection"])
 
 # file_upload tab
 file_upload.header("Upload Image")
