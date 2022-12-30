@@ -24,7 +24,7 @@ class Yolo_Predictor():
 
     # 3. Load testing images
     # *** We can have variable size training images, but test images should be cropped to fixed sqaure size ***
-    def load_img(self, fname, img_dir="./test_data"):
+    def load_data(self, fname, img_dir="./test_data"):
         self.orig_image = cv2.imread(pjoin(img_dir, fname))  # original image (to be compared with)
         self.image = self.orig_image.copy()   # np ndarray
         nrow, ncol, ch = self.image.shape
@@ -36,7 +36,7 @@ class Yolo_Predictor():
         return img_input    # feed this to yolo model
 
     # for our web-app
-    def load_img_from_stream(self, img_stream):
+    def load_data_from_stream(self, img_stream):
         self.orig_image = cv2.imdecode(np.frombuffer(img_stream.read(), np.uint8), 1)  # original image (to be compared with)
         self.orig_image = self.orig_image[:, :, ::-1]
         self.image = self.orig_image.copy()   # np ndarray
@@ -121,10 +121,60 @@ class Yolo_Predictor():
 
         return True
     
-    def display_img(self):
+    def display(self):
         cv2.imshow('Original Image', self.orig_image)
         cv2.imshow('With Object Detection', self.image)
         print("Press ESC to exit.")
-        cv2.waitKey(27)
-        cv2.destroyAllWindows()
+        if cv2.waitKey() == 27:
+            cv2.destroyAllWindows()
 
+class Video_Predictor(Yolo_Predictor):
+    def __init__(self, onnx_dir, yolo_dir):
+        self.started = False
+        self.video_array = []
+        super().__init__(onnx_dir, yolo_dir)
+
+    def load_data(self, fname, v_dir="./video_data"):
+        self.started = False    # reset
+        self.capture = cv2.VideoCapture(pjoin(v_dir, fname))
+
+    """
+    This function combines prediction and draw, 
+    storing an array of video frames
+    """
+    def video_detect(self, 
+            YOLO_IMG_SZ = (640, 640), 
+            conf_thold=0.4, prob_thold=0.5
+            ):
+        while True:
+            ret, frame = self.capture.read()
+            if ret == False:
+                print("Video reaches end or encounters an error.")
+                break
+            
+            self.orig_image = frame
+            self.image = self.orig_image.copy()
+            if not self.started:
+                nrow, ncol, ch = self.image.shape
+                assert ch == 3, "require testing image in RGB format"
+
+                l = max(nrow, ncol)
+                self.started = True
+            # still need img_input
+            img_input = np.zeros((l,l,3), dtype=np.uint8)   # black background board
+            img_input[:nrow, :ncol] = self.image
+
+            pred = super().one_prediction(img_input, YOLO_IMG_SZ=YOLO_IMG_SZ)
+            super().NMS_Draw(pred, img_input, conf_thold, prob_thold, YOLO_IMG_WH=YOLO_IMG_SZ[0])
+
+            # store pred frame
+            self.video_array.append(self.image.copy())
+
+        self.capture.release()
+        return len(self.video_array) == 0   # if no frame, no video can be generated
+
+    def display(self):
+        for frame in self.video_array:
+            cv2.imshow('Video Prediction', frame)
+            if cv2.waitKey(1) == 27:
+                cv2.destroyAllWindows()
