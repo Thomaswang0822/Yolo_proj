@@ -137,6 +137,11 @@ class Video_Predictor(Yolo_Predictor):
     def load_data(self, fname, v_dir="./video_data"):
         self.started = False    # reset
         self.capture = cv2.VideoCapture(pjoin(v_dir, fname))
+        self.fps = round( self.capture.get(cv2.CAP_PROP_FPS) )
+        self.w  = int( self.capture.get(cv2.CAP_PROP_FRAME_WIDTH) )
+        self.h = int( self.capture.get(cv2.CAP_PROP_FRAME_HEIGHT) )
+        self.l = max(self.w, self.h)
+        # print(self.w, self.h, self.l)
 
     """
     This function combines prediction and draw, 
@@ -154,15 +159,10 @@ class Video_Predictor(Yolo_Predictor):
             
             self.orig_image = frame
             self.image = self.orig_image.copy()
-            if not self.started:
-                nrow, ncol, ch = self.image.shape
-                assert ch == 3, "require testing image in RGB format"
-
-                l = max(nrow, ncol)
-                self.started = True
+            
             # still need img_input
-            img_input = np.zeros((l,l,3), dtype=np.uint8)   # black background board
-            img_input[:nrow, :ncol] = self.image
+            img_input = np.zeros((self.l,self.l,3), dtype=np.uint8)   # black background board
+            img_input[:self.h, :self.w] = self.image
 
             pred = super().one_prediction(img_input, YOLO_IMG_SZ=YOLO_IMG_SZ)
             super().NMS_Draw(pred, img_input, conf_thold, prob_thold, YOLO_IMG_WH=YOLO_IMG_SZ[0])
@@ -171,7 +171,7 @@ class Video_Predictor(Yolo_Predictor):
             self.video_array.append(self.image.copy())
 
         self.capture.release()
-        return len(self.video_array) == 0   # if no frame, no video can be generated
+        return len(self.video_array) != 0   # if no frame, no video can be generated
 
     def display(self):
         for frame in self.video_array:

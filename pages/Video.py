@@ -6,7 +6,7 @@ import numpy as np
 import streamlit as st
 from PIL import Image
 # Import prediction script
-from prediction import Yolo_Predictor
+from prediction import Video_Predictor
 import tempfile
 
 
@@ -56,22 +56,48 @@ det_but = det_but_space.button("detect", help='Start detection')
 
 if det_but and video is not None:
     with st.spinner('Processing...'):
+        # grab the file
         tfile = tempfile.NamedTemporaryFile(delete=False)
+        # save video stream to a tmp file
         tfile.write(video.read())
 
-        vf = cv2.VideoCapture(tfile.name)
+        YOLO_DIR = "."
+        MODEL_DIR = "./best.onnx"
+
+        yolo_model = Video_Predictor(MODEL_DIR, YOLO_DIR)
+        yolo_model.load_data(tfile.name, v_dir='')
+        valid = yolo_model.video_detect()
+        if not valid:
+            output_warning.warning("No valid frame was caputured, thus no video to show.")
+        else:
+            # yolo_model.video_array contains all the frames (each w * h * 3 ndarray)
+            # reconstruct a video from these frames and save to a video_out
+            out_file = tempfile.NamedTemporaryFile(suffix='.mp4')
+            writer = cv2.VideoWriter(
+                out_file.name,
+                cv2.VideoWriter_fourcc(*'mp4v'), 
+                yolo_model.fps, 
+                (yolo_model.w, yolo_model.h)
+            )
+            for frame in yolo_model.video_array:
+                writer.write(frame)
+            writer.release()
+            print("video output file size: ", out_file.tell() )
+            # display video_out on this web page
+            output_text.subheader("Video with object detection:")
+            output_vid.video(out_file.read())
     detection.balloons()
 
 
 
-    # Download button
+    """ # Download button
     detection.download_button(
         label="Download detected video as mp4",
         data=pred_img_BufferedReader,
         file_name='Detected_video.mp4',
         mime="video/mp4"
     )
-    det_but_space.empty()
+    det_but_space.empty() """
 
 elif det_but:
     output_warning.error("No input video!")

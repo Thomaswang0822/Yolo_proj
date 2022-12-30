@@ -1,4 +1,5 @@
 from prediction import Video_Predictor
+import cv2
 
 if __name__ == "__main__":
     YOLO_DIR = "."
@@ -15,7 +16,28 @@ if __name__ == "__main__":
 
     yolo_model = Video_Predictor(MODEL_DIR, YOLO_DIR)
     yolo_model.load_data(fname)
-    yolo_model.video_detect(YOLO_IMG_SZ = (640, 640), 
+    valid = yolo_model.video_detect(YOLO_IMG_SZ = (640, 640), 
             conf_thold=0.4, prob_thold=0.5)
-    yolo_model.display()
+
+    """         
+    if valid:
+        yolo_model.display()
+    else:
+        print("No video to show.") """
+
+    if not valid:
+        output_warning.warning("No valid frame was caputured, thus no video to show.")
+    else:
+        # yolo_model.video_array contains all the frames (each w * h * 3 ndarray)
+        # reconstruct a video from these frames and save to a video_out
+        # out_file = tempfile.NamedTemporaryFile(delete=False, suffix='.mp4')
+        writer = cv2.VideoWriter(
+            "test_out.mp4",
+            cv2.VideoWriter_fourcc(*'mp4v'), 
+            yolo_model.fps, 
+            (yolo_model.w, yolo_model.h)
+        )
+        for frame in yolo_model.video_array:
+            writer.write(frame)
+        writer.release()
     

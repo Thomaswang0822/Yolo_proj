@@ -6,3 +6,4 @@ yolov5-old/
 *.cache
 pages/__pycache__
 /__pycache__
+*.mp4
