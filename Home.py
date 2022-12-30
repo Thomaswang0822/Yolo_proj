@@ -39,5 +39,3 @@ st.write('bus')
 
 # TODO: Demo
 st.subheader("Here is a demo of our object detection model:")
-
-
