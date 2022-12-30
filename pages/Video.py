@@ -25,8 +25,8 @@ st.title("Object Detection in a Video")
 
 cur_video = st.container()
 
-# Current Input Image Displayer
-cur_video.subheader("Your input image:")
+# Current Input Video Displayer
+cur_video.subheader("Your input video:")
 cur_video.vid_display = st.empty()
 cur_video.vid_warning = st.empty()
 cur_video.vid_warning.warning("No Video")
@@ -34,8 +34,8 @@ cur_video.vid_warning.warning("No Video")
 file_upload, detection = st.tabs(["Upload Video", "Object detection"])
 
 # file_upload tab
-file_upload.header("Upload Image")
-file_upload.subheader("Please upload your image")
+file_upload.header("Upload Video")
+file_upload.subheader("Please upload your video")
 file_video = file_upload.file_uploader("One Video in .mp4 or .mov",
                                        type=['mp4', 'mov'],
                                        accept_multiple_files=False,
@@ -56,6 +56,7 @@ det_but_space = detection.empty()
 det_but = det_but_space.button("detect", help='Start detection')
 
 if det_but and video is not None:
+    det_but_space.empty()
     with st.spinner('Processing...'):
         # grab the file
         tfile = tempfile.NamedTemporaryFile(delete=False)
@@ -98,6 +99,7 @@ if det_but and video is not None:
             output_text.subheader("Video with object detection:")
             output_vid.video(out_file2.read())
     detection.balloons()
+
 
 
 

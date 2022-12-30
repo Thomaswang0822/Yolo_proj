@@ -65,6 +65,7 @@ det_but = det_but_space.button("detect",
                            help='Start detection')
 
 if det_but and image is not None:
+    det_but_space.empty()
     with st.spinner('Processing...'):
         YOLO_DIR = "."
         MODEL_DIR = "./best.onnx"
@@ -97,7 +98,7 @@ if det_but and image is not None:
         file_name='Detected_image.png',
         mime="image/png"
     )
-    det_but_space.empty()
+    
 
 elif det_but:
     output_warning.error("No input image!")
