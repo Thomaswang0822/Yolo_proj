@@ -8,6 +8,7 @@ from PIL import Image
 # Import prediction script
 from prediction import Video_Predictor
 import tempfile
+import os, subprocess
 
 
 
@@ -82,22 +83,25 @@ if det_but and video is not None:
             for frame in yolo_model.video_array:
                 writer.write(frame)
             writer.release()
-            print("video output file size: ", out_file.tell() )
+
+            # Not all browsers support the codec
+            # re-load the file and convert to a codec that is readable using ffmpeg 
+            out_file2 = tempfile.NamedTemporaryFile(suffix='.mp4')
+            LOG_ERR = "16"
+            subprocess.run(["ffmpeg", "-i", out_file.name,
+                                "-r", str(yolo_model.fps), 
+                                "-v", LOG_ERR,
+                                "-vcodec", "libx264", out_file2.name, '-y'])
+
+
             # display video_out on this web page
             output_text.subheader("Video with object detection:")
-            output_vid.video(out_file.read())
+            output_vid.video(out_file2.read())
     detection.balloons()
 
 
 
-    """ # Download button
-    detection.download_button(
-        label="Download detected video as mp4",
-        data=pred_img_BufferedReader,
-        file_name='Detected_video.mp4',
-        mime="video/mp4"
-    )
-    det_but_space.empty() """
+    """ Right click to download the video with prediction."""
 
 elif det_but:
     output_warning.error("No input video!")

@@ -18,9 +18,9 @@ class Yolo_Predictor():
         # 2. Load trained yolo model into opencv
         self.yolov5 = cv2.dnn.readNetFromONNX(onnx_dir)
         # set computing engine
-        self.yolov5.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
+        self.yolov5.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
         # make computations on device
-        self.yolov5.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
+        self.yolov5.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
 
     # 3. Load testing images
     # *** We can have variable size training images, but test images should be cropped to fixed sqaure size ***
@@ -154,7 +154,7 @@ class Video_Predictor(Yolo_Predictor):
         while True:
             ret, frame = self.capture.read()
             if ret == False:
-                print("Video reaches end or encounters an error.")
+                print("Video reaches end.")
                 break
             
             self.orig_image = frame
