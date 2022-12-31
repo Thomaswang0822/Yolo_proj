@@ -1,4 +1,3 @@
-name: yolo_streamlit
 channels:
   - anaconda
   - conda-forge
