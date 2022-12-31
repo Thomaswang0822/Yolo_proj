@@ -59,7 +59,7 @@ if det_but and video is not None:
     det_but_space.empty()
     with st.spinner('Processing...'):
         # grab the file
-        tfile = tempfile.NamedTemporaryFile(delete=False)
+        tfile = tempfile.NamedTemporaryFile(suffix='.mp4')
         # save video stream to a tmp file
         tfile.write(video.read())
 
@@ -104,10 +104,10 @@ if det_but and video is not None:
 #                                 "-vcodec", "libx264", out_file2, '-y'])
 
             print(f"Written to outfile2 {out_file2}")
-            print("outfile2 file size: ", os.stat(out_file).st_size )
+            print("outfile2 file size: ", os.stat(out_file2).st_size )
             # display video_out on this web page
             output_text.subheader("Video with object detection:")
-            with open(out_file2, 'rb') as out2:
+            with open(oypo & fut_file2, 'rb') as out2:
                 output_vid.video(out2.read())
     detection.balloons()
 
