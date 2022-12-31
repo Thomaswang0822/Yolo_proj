@@ -1,7 +1,5 @@
 channels:
-  - anaconda
   - conda-forge
-  - defaults
 dependencies:
   - numpy
   - opencv
