@@ -97,7 +97,7 @@ if det_but and video is not None:
             # out_file2 = tempfile.NamedTemporaryFile(suffix='.mp4')
             out_file2 = "tmp2.mp4"
             LOG_ERR = "16"
-            os.system(f"ffmpeg -i {tfile.name} -r {yolo_model.fps} libx264 {out_file2} -y")
+            os.system(f"ffmpeg -i {tfile.name} -r {yolo_model.fps} -vcodec libx264 {out_file2} -y")
 #             subprocess.run(["ffmpeg", "-i", out_file,
 #                                 "-r", str(yolo_model.fps), 
 # #                                 "-v", LOG_ERR,
