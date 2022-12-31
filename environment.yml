@@ -1,0 +1,9 @@
+name: yolo_streamlit
+channels:
+  - anaconda
+  - conda-forge
+  - defaults
+dependencies:
+  - numpy
+  - opencv
+  - streamlit

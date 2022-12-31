@@ -81,7 +81,7 @@ if det_but and video is not None:
             out_file = "tmp1.mp4"
             writer = cv2.VideoWriter(
                 out_file,
-                cv2.VideoWriter_fourcc(*'mp4v'), 
+                cv2.VideoWriter_fourcc(*'avc1'), 
                 yolo_model.fps, 
                 (yolo_model.w, yolo_model.h)
             )
@@ -95,9 +95,9 @@ if det_but and video is not None:
             # Not all browsers support the codec
             # re-load the file and convert to a codec that is readable using ffmpeg 
             # out_file2 = tempfile.NamedTemporaryFile(suffix='.mp4')
-            out_file2 = "tmp2.mp4"
-            LOG_ERR = "16"
-            os.system(f"ffmpeg -i {out_file} -r {yolo_model.fps} -vcodec libx264 {out_file2} -y")
+            # out_file2 = "tmp2.mp4"
+            # LOG_ERR = "16"
+            # os.system(f"ffmpeg -i {out_file} -r {yolo_model.fps} -vcodec libx264 {out_file2} -y")
             # subprocess.run(["ffmpeg", "-i", out_file,
             #                     "-r", str(yolo_model.fps), 
             #                      "-v", LOG_ERR,

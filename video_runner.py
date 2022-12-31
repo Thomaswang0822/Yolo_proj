@@ -37,8 +37,8 @@ if __name__ == "__main__":
         fname = out_file.name
         writer = cv2.VideoWriter(
             out_file.name,
-            #cv2.VideoWriter_fourcc(*'H264'),
-            -1, 
+            cv2.VideoWriter_fourcc(*'avc1'),
+            # -1, 
             yolo_model.fps, 
             (yolo_model.w, yolo_model.h)
         )
@@ -50,5 +50,6 @@ if __name__ == "__main__":
         
         shutil.copy(fname, 'bar3.mp4')
         # "-preset", "veryfast",
+        # opencv-python==4.6.0
 
     
