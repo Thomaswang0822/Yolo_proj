@@ -107,7 +107,7 @@ if det_but and video is not None:
             print("outfile2 file size: ", os.stat(out_file2).st_size )
             # display video_out on this web page
             output_text.subheader("Video with object detection:")
-            with open(oypo & fut_file2, 'rb') as out2:
+            with open(out_file2, 'rb') as out2:
                 output_vid.video(out2.read())
     detection.balloons()
 
