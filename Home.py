@@ -38,9 +38,9 @@ st.write('cow')
 st.write('bus')
 
 # TODO: Demo
-st.subheader("Here is a demo of our object detection model:")
+st.subheader("Here is a demo of real-time object detection:")
 
-video_file = open('bar3.mp4', 'rb')
+video_file = open('demo.mp4', 'rb')
 video_bytes = video_file.read()
 
 st.video(video_bytes, format="video/mp4")

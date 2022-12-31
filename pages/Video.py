@@ -78,10 +78,10 @@ if det_but and video is not None:
             # reconstruct a video from these frames and save to a video_out
             
             # out_file = tempfile.NamedTemporaryFile(suffix='.mp4')
-            out_file = "tmp1.mp4"
+            out_file = "tmp1.webm"
             writer = cv2.VideoWriter(
                 out_file,
-                cv2.VideoWriter_fourcc(*'avc1'), 
+                cv2.VideoWriter_fourcc(*'vp80'), 
                 yolo_model.fps, 
                 (yolo_model.w, yolo_model.h)
             )
@@ -109,7 +109,7 @@ if det_but and video is not None:
             # display video_out on this web page
             output_text.subheader("Video with object detection:")
             with open(out_file, 'rb') as out2:
-                output_vid.video(out2.read(), format="video/mp4")
+                output_vid.video(out2.read(), format="video/webm")
     detection.balloons()
 
 

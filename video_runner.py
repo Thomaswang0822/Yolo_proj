@@ -12,7 +12,7 @@ if __name__ == "__main__":
     YOLO_IMG_WH=640 
 
     # fname = "background.jpg"
-    fname = "train.mp4"
+    fname = "YOLO_demo_video.mp4"
 
     conf_thold=0.4  # how likely this bbox has bounded an object of interest
     prob_thold=0.5  # given this is an object of interest, what is the highest prob score of all classes
@@ -37,7 +37,7 @@ if __name__ == "__main__":
         fname = out_file.name
         writer = cv2.VideoWriter(
             out_file.name,
-            cv2.VideoWriter_fourcc(*'avc1'),
+            cv2.VideoWriter_fourcc(*'mp4v'),
             # -1, 
             yolo_model.fps, 
             (yolo_model.w, yolo_model.h)
@@ -47,8 +47,13 @@ if __name__ == "__main__":
         print("video output file size: ", os.stat(out_file.name).st_size )
         writer.release()
 
-        
-        shutil.copy(fname, 'bar3.mp4')
+        out_file2 = tempfile.NamedTemporaryFile(suffix='.mp4')
+        fname2 = out_file2.name
+        subprocess.run(["ffmpeg", "-i", out_file.name,
+                            "-r", "30", "-v", "16",
+                            "-vcodec", "libx264", out_file2.name, '-y'])
+
+        shutil.copy(fname2, 'demo.mp4')
         # "-preset", "veryfast",
         # opencv-python==4.6.0
 
