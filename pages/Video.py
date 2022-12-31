@@ -97,11 +97,11 @@ if det_but and video is not None:
             # out_file2 = tempfile.NamedTemporaryFile(suffix='.mp4')
             out_file2 = "tmp2.mp4"
             LOG_ERR = "16"
-            # os.system(f"ffmpeg -i {out_file.name} -r {yolo_model.fps} -v 16 -vcodec libx264 {out_file2.name} -y")
-            subprocess.run(["ffmpeg", "-i", out_file,
-                                "-r", str(yolo_model.fps), 
-#                                 "-v", LOG_ERR,
-                                "-vcodec", "libx264", out_file2, '-y'])
+            os.system(f"ffmpeg -codecs | grep libx264; ffmpeg -i {out_file} -r {yolo_model.fps} -v 16 -vcodec libx264 {out_file2} -y")
+#             subprocess.run(["ffmpeg", "-i", out_file,
+#                                 "-r", str(yolo_model.fps), 
+# #                                 "-v", LOG_ERR,
+#                                 "-vcodec", "libx264", out_file2, '-y'])
 
             print(f"Written to outfile2 {out_file2}")
             print("outfile2 file size: ", os.stat(out_file).st_size )
