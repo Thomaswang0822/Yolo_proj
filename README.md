@@ -18,6 +18,18 @@ This is an exploratory project of [YOLO](https://pjreddie.com/darknet/yolo/), th
 ![Web-app screenshot](./example_results/web_app.png)  
 *Our web-app*
 
+## Update 1.0: Video Detection
+We include the Video detection feature! 
+
+- To look at a demo result, please visit our [web-app](https://thomaswang0822-yolo-proj-home-j6063r.streamlit.app/) home page.
+
+- To play around with your own video locally, please change the dir and filename in video_runner.py and run it.
+
+- You can also try it out with our web-app. In *video* tab, upload your own mp4 video and do video-object detection with a single click!
+**Note: there is a very techinical comptability issue between browser video player and opencv video encoder type (like H264),**
+**so we used .webm format as a workaround. This increase the video writing time (numpy ndarray -> video), but model efficiency isn't affected.**
+
+
 ## Roadmap
 
 - Setup the Python environment with GPU enabled.
