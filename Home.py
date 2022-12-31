@@ -39,3 +39,8 @@ st.write('bus')
 
 # TODO: Demo
 st.subheader("Here is a demo of our object detection model:")
+
+# video_file = open('tmp1.mp4', 'rb')
+# video_bytes = video_file.read()
+
+# st.video(video_bytes, format="video/mp4")
