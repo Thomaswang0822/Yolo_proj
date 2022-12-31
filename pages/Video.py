@@ -68,7 +68,9 @@ if det_but and video is not None:
 
         yolo_model = Video_Predictor(MODEL_DIR, YOLO_DIR)
         yolo_model.load_data(tfile.name, v_dir='')
+        print("Model has loaded video data.")
         valid = yolo_model.video_detect()
+        print("Model has finished prediction.")
         if not valid:
             output_warning.warning("No valid frame was caputured, thus no video to show.")
         else:
@@ -81,9 +83,12 @@ if det_but and video is not None:
                 yolo_model.fps, 
                 (yolo_model.w, yolo_model.h)
             )
+            print("cv2 writer init DONE.")
             for frame in yolo_model.video_array:
                 writer.write(frame)
             writer.release()
+            print(f"Written to outfile1 {out_file.name}")
+            print("outfile1 file size: ", os.stat(out_file.name).st_size )
 
             # Not all browsers support the codec
             # re-load the file and convert to a codec that is readable using ffmpeg 
@@ -91,10 +96,11 @@ if det_but and video is not None:
             LOG_ERR = "16"
             subprocess.run(["ffmpeg", "-i", out_file.name,
                                 "-r", str(yolo_model.fps), 
-                                "-v", LOG_ERR,
+#                                 "-v", LOG_ERR,
                                 "-vcodec", "libx264", out_file2.name, '-y'])
 
-
+            print(f"Written to outfile2 {out_file2.name}")
+            print("outfile2 file size: ", os.stat(out_file.name).st_size )
             # display video_out on this web page
             output_text.subheader("Video with object detection:")
             output_vid.video(out_file2.read())
