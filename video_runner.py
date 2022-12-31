@@ -33,11 +33,11 @@ if __name__ == "__main__":
     else:
         # yolo_model.video_array contains all the frames (each w * h * 3 ndarray)
         # reconstruct a video from these frames and save to a video_out
-        out_file = tempfile.NamedTemporaryFile(suffix='.mp4')
+        out_file = tempfile.NamedTemporaryFile(suffix='.webm')
         fname = out_file.name
         writer = cv2.VideoWriter(
             out_file.name,
-            cv2.VideoWriter_fourcc(*'mp4v'), 
+            cv2.VideoWriter_fourcc(*'vp80'), 
             yolo_model.fps, 
             (yolo_model.w, yolo_model.h)
         )
@@ -46,14 +46,14 @@ if __name__ == "__main__":
         print("video output file size: ", os.stat(out_file.name).st_size )
         writer.release()
 
-        out_file2 = tempfile.NamedTemporaryFile(suffix='.mp4')
+        """ out_file2 = tempfile.NamedTemporaryFile(suffix='.mp4')
         fname2 = out_file2.name
         subprocess.run(["ffmpeg", "-i", out_file.name,
                             "-r", "30", "-v", "16",
-                            "-vcodec", "libx264", out_file2.name, '-y'])
+                            "-vcodec", "libx264", out_file2.name, '-y']) """
 
         
-        shutil.copy(fname2, 'bar3.mp4')
+        shutil.copy(fname, 'bar3.webm')
         # "-preset", "veryfast",
 
     

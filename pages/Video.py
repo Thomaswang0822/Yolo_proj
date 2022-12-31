@@ -78,37 +78,37 @@ if det_but and video is not None:
             # reconstruct a video from these frames and save to a video_out
             
             # out_file = tempfile.NamedTemporaryFile(suffix='.mp4')
-            # out_file = "tmp1.mp4"
-            # writer = cv2.VideoWriter(
-            #     out_file,
-            #     cv2.VideoWriter_fourcc(*'mp4v'), 
-            #     yolo_model.fps, 
-            #     (yolo_model.w, yolo_model.h)
-            # )
-            # print("cv2 writer init DONE.")
-            # for frame in yolo_model.video_array:
-            #     writer.write(frame)
-            # writer.release()
-            # print(f"Written to outfile1 {out_file}")
-            # print("outfile1 file size: ", os.stat(out_file).st_size )
+            out_file = "tmp1.webm"
+            writer = cv2.VideoWriter(
+                out_file,
+                cv2.VideoWriter_fourcc(*'vp80'), 
+                yolo_model.fps, 
+                (yolo_model.w, yolo_model.h)
+            )
+            print("cv2 writer init DONE.")
+            for frame in yolo_model.video_array:
+                writer.write(frame)
+            writer.release()
+            print(f"Written to outfile1 {out_file}")
+            print("outfile1 file size: ", os.stat(out_file).st_size )
 
-            # Not all browsers support the codec
-            # re-load the file and convert to a codec that is readable using ffmpeg 
-            # out_file2 = tempfile.NamedTemporaryFile(suffix='.mp4')
-            out_file2 = "tmp2.mp4"
-            LOG_ERR = "16"
-            os.system(f"ffmpeg -i {tfile.name} -r {yolo_model.fps} -vcodec libx264 {out_file2} -y")
-#             subprocess.run(["ffmpeg", "-i", out_file,
-#                                 "-r", str(yolo_model.fps), 
-# #                                 "-v", LOG_ERR,
-#                                 "-vcodec", "libx264", out_file2, '-y'])
+            # # Not all browsers support the codec
+            # # re-load the file and convert to a codec that is readable using ffmpeg 
+            # # out_file2 = tempfile.NamedTemporaryFile(suffix='.mp4')
+            # out_file2 = "tmp2.mp4"
+            # LOG_ERR = "16"
+            # os.system(f"ffmpeg -i {tfile.name} -r {yolo_model.fps} -vcodec libx264 {out_file2} -y")
+            # subprocess.run(["ffmpeg", "-i", out_file,
+            #                     "-r", str(yolo_model.fps), 
+            #                      "-v", LOG_ERR,
+            #                     "-vcodec", "libx264", out_file2, '-y'])
 
-            print(f"Written to outfile2 {out_file2}")
-            print("outfile2 file size: ", os.stat(out_file2).st_size )
+            # print(f"Written to outfile2 {out_file2}")
+            # print("outfile2 file size: ", os.stat(out_file2).st_size )
             # display video_out on this web page
             output_text.subheader("Video with object detection:")
-            with open(out_file2, 'rb') as out2:
-                output_vid.video(out2.read())
+            with open(out_file, 'rb') as out2:
+                output_vid.video(out2.read(), format="video/webm")
     detection.balloons()
 
 
